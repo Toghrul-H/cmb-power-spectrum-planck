@@ -1,107 +1,20 @@
-.
-
-🌌 CMB Power Spectrum Analysis with Planck 2018 Data
+🌌 CMB Power Spectrum Analysis (Planck 2018 SMICA)
 
 Author: Toghrul Hasanli
-Environment: Linux, Python (venv), Jupyter Notebook
-Tools: Healpy, CAMB, Astropy, NumPy, Matplotlib
+Course / Project: Cosmology & Data Analysis · Python / Jupyter
+Tools: Healpy · CAMB · Astropy · NumPy · Matplotlib
+Data Source: ESA Planck 2018 (Public Release)
 
-📌 Overview
+📘 Overview
 
-This project reproduces key results of modern cosmology by analyzing real Planck 2018 CMB temperature data.
-The goal is to extract the CMB angular power spectrum from the SMICA map and compare it with the ΛCDM theoretical prediction generated using CAMB.
+This project reproduces the Cosmic Microwave Background (CMB) angular power spectrum using real Planck 2018 SMICA data.
+The goal is to:
 
-The workflow follows the same methodology used in contemporary CMB research pipelines.
+Load and clean CMB sky maps
 
-🎯 Project Objectives
+Apply Planck temperature masks
 
-Load and inspect Planck SMICA CMB maps in HEALPix format.
-
-Apply the official Planck temperature mask to remove galactic contamination.
-
-Plot the cleaned full-sky CMB map using a Planck-style colormap.
-
-Compute the observed angular power spectrum 
-𝐶
-ℓ
-C
-ℓ
-	​
-
-.
-
-Convert to
-
-𝐷
-ℓ
-=
-ℓ
-(
-ℓ
-+
-1
-)
-2
-𝜋
-𝐶
-ℓ
-D
-ℓ
-	​
-
-=
-2π
-ℓ(ℓ+1)
-	​
-
-C
-ℓ
-	​
-
-
-Smooth the spectrum and detect acoustic peaks.
-
-Generate the theoretical ΛCDM spectrum using CAMB.
-
-Compare the observed and theoretical curves on log–log axes.
-
-📂 Dataset
-
-All datasets are stored under the data/ directory:
-
-SMICA map
-COM_CMB_IQU-smica_2048_R3.00_full.fits
-
-Temperature map (I), Q/U polarization maps, masks
-
-Commander map (optional)
-COM_CMB_IQU-commander_2048_R3.00_full.fits
-
-Planck Parchment Colormap
-Planck_Parchment_RGB.txt
-
-🧪 Analysis Steps
-1. Load and mask the CMB map
-
-Extract SMICA I_STOKES (temperature)
-
-Load TMASK to remove invalid or contaminated pixels
-
-Apply mask → produce a cleaned CMB map
-
-2. Visualize the CMB sky
-
-Render Mollweide projection
-
-Use official Planck-themed colormap
-
-Adjust map contrast with percentiles
-
-3. Compute the CMB angular power spectrum
-
-Use healpy.anafast
-
-Compute both 
+Compute the observed spectrum 
 𝐶
 ℓ
 C
@@ -116,25 +29,89 @@ D
 	​
 
 
-Apply smoothing (moving average or Gaussian)
+Detect acoustic peaks
 
-4. Detect acoustic peaks
+Generate the theoretical ΛCDM spectrum from CAMB
 
-Use scipy.signal.find_peaks
+Compare observations with cosmological predictions
 
-Identify:
+This workflow follows the methodology used in real CMB research and demonstrates how Planck data encodes the physics of the early Universe.
 
-1st peak ~ ℓ ≈ 220
+🛰️ Dataset
 
-2nd peak ~ ℓ ≈ 540
+All data files are stored in the data/ directory:
 
-3rd peak ~ ℓ ≈ 800
+File	Description
+COM_CMB_IQU-smica_2048_R3.00_full.fits	SMICA CMB map (I, Q, U Stokes components + masks)
+COM_CMB_IQU-commander_2048_R3.00_full.fits	Commander map (optional alternative)
+Planck_Parchment_RGB.txt	Official Planck colormap
 
-Mark them visually
+The SMICA map (field 0) and its temperature mask (field 3) are used for all core computations.
 
-5. Generate theoretical ΛCDM spectrum
+🧠 Scientific Objectives
+✔ 1. Visualize the CMB Sky
 
-Use CAMB with Planck-like parameters:
+Load the SMICA intensity map
+
+Apply the official Planck temperature mask
+
+Plot a full-sky Mollweide projection using the Planck colormap
+
+✔ 2. Extract the Power Spectrum
+
+Compute:
+
+𝐶
+ℓ
+,
+𝐷
+ℓ
+=
+ℓ
+(
+ℓ
++
+1
+)
+2
+𝜋
+𝐶
+ℓ
+C
+ℓ
+	​
+
+,D
+ℓ
+	​
+
+=
+2π
+ℓ(ℓ+1)
+	​
+
+C
+ℓ
+	​
+
+
+using healpy.anafast() on the cleaned map.
+
+✔ 3. Detect Acoustic Peaks
+
+Identify the characteristic peaks at:
+
+ℓ ≈ 220 (first acoustic peak)
+
+ℓ ≈ 540
+
+ℓ ≈ 800
+
+These correspond to sound waves in the early Universe plasma.
+
+✔ 4. Generate the Theoretical ΛCDM Spectrum
+
+Using CAMB with Planck-like cosmological parameters:
 
 H₀ = 67.36
 
@@ -144,99 +121,113 @@ H₀ = 67.36
 
 τ = 0.0544
 
-Σmν = 0.06 eV
+Σ mν = 0.06 eV
 
-6. Compare Planck vs CAMB
+✔ 5. Compare Observation vs Theory
 
-Overlay curves
+Plot SMICA vs ΛCDM on logarithmic axes.
+The spectra should align closely—confirming the ΛCDM model and the quality of Planck data.
 
-Normalize SMICA spectrum for visual comparison
+📊 Example Outputs
+1. Cleaned CMB Map
 
-Observe strong alignment of peaks
+Mollweide projection
 
-📊 Key Results
-✔ Full-sky CMB map
+Official Planck parchment colormap
 
-Cleaned and masked SMICA map shows expected hot/cold anisotropies.
+Masked Galactic region removed
 
-✔ Observed CMB power spectrum
+2. Power Spectrum
 
-Acoustic peak structure clearly visible after smoothing.
+Raw 
+𝐷
+ℓ
+D
+ℓ
+	​
 
-✔ Peak detection
+ (gray)
 
-Automated detection matches theoretical expectations.
+Smoothed spectrum (red)
 
-✔ SMICA vs ΛCDM comparison
+3. Acoustic Peak Detection
 
-Both spectra overlap closely → reproducing Planck’s primary cosmological results.
+Peaks marked using scipy.signal.find_peaks
 
-📦 Python Libraries Used
+4. SMICA vs CAMB Comparison
+
+ΛCDM theoretical curve (black dashed)
+
+SMICA spectrum (red, rescaled)
+
+🧰 Tools & Libraries
 Library	Purpose
 NumPy	Numerical operations
-Matplotlib	Plotting (maps & spectra)
-Healpy	HEALPix map handling, spherical harmonics, anafast
-Astropy	FITS file reading
-CAMB	Theoretical ΛCDM CMB spectrum
-SciPy	Smoothing + peak detection
-▶️ How to Run
+Matplotlib	Plotting maps & spectra
+Astropy (FITS)	Reading Planck FITS files
+Healpy (HEALPix)	CMB maps, masking, spectra
+CAMB	Cosmological predictions & theory
+SciPy	Smoothing, peak detection
+📁 Project Structure
+cmb-power-spectrum-planck/
+│
+├── data/
+│   ├── COM_CMB_IQU-smica_2048_R3.00_full.fits
+│   ├── COM_CMB_IQU-commander_2048_R3.00_full.fits
+│   ├── Planck_Parchment_RGB.txt
+│
+├── notebook/
+│   └── cmb_power_spectrum.ipynb
+│
+├── plots/
+│   ├── smica_clean_map.png
+│   ├── Dl_raw_vs_smooth.png
+│   ├── peak_detection.png
+│   └── smica_vs_camb.png
+│
+└── README.md
 
-Create virtual environment:
+▶️ How to Run the Project
+
+Create a virtual environment:
 
 python3 -m venv venv
 source venv/bin/activate
 
 
-Install requirements:
+Install required packages:
 
 pip install numpy matplotlib healpy astropy camb scipy
 
 
-Start Jupyter Notebook:
+Open the Jupyter Notebook:
 
 jupyter notebook
 
 
-Run the notebook file:
+Run all cells in cmb_power_spectrum.ipynb.
 
-cmb_power_spectrum.ipynb
+🏁 Conclusion
 
-🧭 Project Structure
-cmb_project/
-│
-├── data/
-│   ├── COM_CMB_IQU-smica_2048_R3.00_full.fits
-│   ├── COM_CMB_IQU-commander_2048_R3.00_full.fits
-│   └── Planck_Parchment_RGB.txt
-│
-├── cmb_power_spectrum.ipynb
-├── plots/              
-└── README.md
+This project demonstrates a complete mini–CMB analysis pipeline:
 
-📘 References
+Data cleaning
 
-Planck Collaboration (2018) — Planck Legacy Papers
+Power spectrum extraction
 
-HEALPix / Healpy documentation
+Physical peak detection
 
-CAMB documentation
+Comparison with ΛCDM cosmology
 
-“The Cosmic Microwave Background” — Wayne Hu
+The results reproduce the key scientific insight of the Planck mission:
+the observed Universe is consistent with the ΛCDM model.
 
-“A Student’s Guide to the CMB” — Klauber
+📚 References
 
-📌 Summary
+Planck Collaboration (2018), Planck 2018 Results
 
-This project successfully reproduces the essential cosmological result:
+HEALPix: Górski et al. (2005)
 
-➡️ The observed Planck CMB power spectrum closely matches the ΛCDM theoretical prediction.
+CAMB: Lewis et al. (2000)
 
-It demonstrates proper use of:
-
-CMB data processing
-
-HEALPix formats
-
-Power spectrum estimation
-
-Theoretical cosmology tools (CAMB)
+Tutorials from ESA/Planck Legacy Archive
